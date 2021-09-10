@@ -32,12 +32,16 @@ class TaskCat extends StatelessWidget {
               cursorColor: values.taskCatThemeColor
             ),
         ),
-        home: IndexedStack(
-          index: 0,
-          children: [
-            HomeScreen(),
-            EntryScreen(),
-          ],
+        home: Consumer<TaskCatSharedData>(
+          builder: (_, data, __){
+            return IndexedStack(
+              index: data.stackIndex,
+              children: [
+                HomeScreen(),
+                EntryScreen(),
+              ],
+            );
+          },
         ),
       ),
     );

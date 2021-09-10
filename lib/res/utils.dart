@@ -7,3 +7,4 @@ Future<void> ajustScreenOrientation() async {
       [DeviceOrientation.portraitUp]
   );
 }
+
