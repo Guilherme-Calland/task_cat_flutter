@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_cat/shared_data/task_cat_shared_data.dart';
+import 'package:task_cat/database/database_helper.dart';
 
 Color taskCatThemeColor = Color(0xffffb469);
 
@@ -17,4 +17,6 @@ Map<int, Color> taskCatThemeColorMap = {
 };
 
 MaterialColor taskCatThemeMaterialColor = MaterialColor(0xffffb469, taskCatThemeColorMap);
+
+final database = DatabaseHelper();
 

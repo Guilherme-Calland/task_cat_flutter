@@ -35,9 +35,9 @@ class DatabaseHelper {
     await db.execute(sql);
   }
 
-  create(Map data) async {
+  create(Map rawData) async {
     final db = await database;
-    int? result = await db.insert('tasks', data);
+    int? result = await db.insert('tasks', rawData);
     return result;
   }
 

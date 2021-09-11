@@ -8,3 +8,9 @@ Future<void> ajustScreenOrientation() async {
   );
 }
 
+Future<dynamic> sleep({required int milliseconds}) =>
+    Future.delayed(Duration(milliseconds: milliseconds));
+
+void hideKeyboard(BuildContext inContext) {
+  FocusScope.of(inContext).requestFocus(FocusNode());
+}

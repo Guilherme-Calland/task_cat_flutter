@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_cat/model/task.dart';
+import 'package:task_cat/res/utils.dart' as utils;
 import 'package:task_cat/res/values.dart' as values;
 import 'package:task_cat/shared_data/task_cat_shared_data.dart';
 import 'package:task_cat/widgets/task_cat_button.dart';
 
 class EntryScreen extends StatelessWidget {
   @override
-  Widget build(_) {
+  Widget build(BuildContext inContext) {
     return Consumer<TaskCatSharedData>(
       builder: (_, data, __) {
         return Scaffold(
@@ -31,6 +33,9 @@ class EntryScreen extends StatelessWidget {
                       color: values.taskCatThemeColor),
                 ),
                 TextField(
+                  onChanged: (String inValue){
+                    data.setTaskBeingEdited( Task(name: inValue) );
+                  },
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: values.taskCatThemeColor,
@@ -53,8 +58,9 @@ class EntryScreen extends StatelessWidget {
                     ),
                     TaskCatButton(
                       inText: 'Save',
-                      inOnPressed: () {
-                        data.setStackIndex(0);
+                      inOnPressed: () async{
+                        _isNewTask(data) ?
+                            _saveTask(inContext, data) : (){} ;
                       },
                     )
                   ],
@@ -66,4 +72,23 @@ class EntryScreen extends StatelessWidget {
       },
     );
   }
+  
+  _saveTask(BuildContext inContext, TaskCatSharedData data) async {
+    final newTask = data.taskBeingEdited;
+    if(newTask.name == '') return;
+    Map<String, String?> rawData = {'name': newTask.name};
+    int? result = await values.database.create(rawData);
+    print('task of id $result was created');
+    await _backToHomeScreen(inContext, data);
+  }
+
+  bool _nameFieldIsEmpty(Task task) => task.name == '';
+
+  Future<void> _backToHomeScreen(BuildContext inContext, TaskCatSharedData data) async {
+    utils.hideKeyboard(inContext);
+    await utils.sleep(milliseconds: 500);
+    data.setStackIndex(0);
+  }
+
+  bool _isNewTask(TaskCatSharedData data) => data.taskBeingEdited.id == null;
 }
