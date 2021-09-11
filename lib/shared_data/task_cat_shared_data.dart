@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:task_cat/model/task.dart';
 import 'package:task_cat/res/resources.dart' as res;
+import 'package:task_cat/res/utils.dart' as utils;
 import 'package:task_cat/res/values.dart' as values;
 
 class TaskCatSharedData extends ChangeNotifier{
@@ -9,6 +10,7 @@ class TaskCatSharedData extends ChangeNotifier{
   var taskCatAvatar = res.taskCatRegular;
   List<Task> taskList = [];
   String order = 'ASC';
+  bool playTextAnimation = false;
 
   createTask(Task task) async {
     Map<String, dynamic> rawData = task.taskToMap();
@@ -29,11 +31,12 @@ class TaskCatSharedData extends ChangeNotifier{
     taskList = tempTaskList;
 
     if(taskList.isEmpty){
-      taskCatAvatar =
-          isDeleting != null ?
-              res.taskCatVeryHappy : res.taskCatCatsplaining;
+      if(isDeleting != null){
+        taskCatAvatar = res.taskCatVeryHappy;
+      }else{
+        beginTextAnimation();
+      }
     }
-
     notifyListeners();
   }
 
@@ -55,5 +58,22 @@ class TaskCatSharedData extends ChangeNotifier{
   void flipList(){
     order = (order == 'ASC') ?
         'DESC' : 'ASC';
+    readTasks();
+  }
+
+  void finishTextAnimation() async{
+    playTextAnimation = false;
+    notifyListeners();
+    await utils.sleep(milliseconds: 1000);
+    taskCatAvatar = res.taskCatHappy;
+    notifyListeners();
+  }
+
+  void beginTextAnimation() async{
+    playTextAnimation = true;
+    notifyListeners();
+    await utils.sleep(milliseconds: 2000);
+    taskCatAvatar = res.taskCatCatsplaining;
+    notifyListeners();
   }
 }

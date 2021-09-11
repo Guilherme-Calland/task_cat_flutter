@@ -6,7 +6,7 @@ import 'package:task_cat/shared_data/task_cat_shared_data.dart';
 class TitleSection extends StatelessWidget {
   @override
   Widget build(BuildContext inContext) {
-    final provider = Provider.of<TaskCatSharedData>(inContext, listen: true);
+    final provider = Provider.of<TaskCatSharedData>(inContext, listen: false);
     final numTasks = provider.taskList.length;
     return Container(
       padding: EdgeInsets.only(

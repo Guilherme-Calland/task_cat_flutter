@@ -15,6 +15,8 @@ dependencies:
   sqflite: ^2.0.0+4
   #shared data
   provider: ^6.0.0
+  #typing text animation
+  animated_text_kit: ^4.2.1
 
 dev_dependencies:
   flutter_test:
