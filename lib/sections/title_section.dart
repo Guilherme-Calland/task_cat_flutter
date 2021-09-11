@@ -17,13 +17,16 @@ class TitleSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            child: Icon(
-              Icons.list,
-              color: values.taskCatThemeColor,
+          GestureDetector(
+            onTap: () => provider.flipList(),
+            child: CircleAvatar(
+              child: Icon(
+                Icons.list,
+                color: values.taskCatThemeColor,
+              ),
+              backgroundColor: Colors.white,
+              radius: 30.0,
             ),
-            backgroundColor: Colors.white,
-            radius: 30.0,
           ),
           SizedBox(
             height: 10,

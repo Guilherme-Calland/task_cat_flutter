@@ -5,29 +5,35 @@ import 'package:task_cat/res/values.dart' as values;
 
 class TaskCatSharedData extends ChangeNotifier{
 
-  int stackIndex = 0;
+  bool hasInitialized = false;
   var taskCatAvatar = res.taskCatRegular;
   List<Task> taskList = [];
-
-  void setStackIndex(int index){
-    stackIndex = index;
-  }
+  String order = 'ASC';
 
   createTask(Task task) async {
     Map<String, dynamic> rawData = task.taskToMap();
     int? result = await values.database.create(rawData);
     print('created task of id $result');
+    taskCatAvatar = res.taskCatRegular;
     readTasks();
   }
 
-  readTasks() async{
-    List rawData = await values.database.read();
+  readTasks({bool? isDeleting}) async{
+    hasInitialized = true;
+    List rawData = await values.database.read(order);
     List<Task> tempTaskList = [];
     rawData.forEach((element) {
       Task tempTask = Task.mapToTask(element);
       tempTaskList.add(tempTask);
     });
     taskList = tempTaskList;
+
+    if(taskList.isEmpty){
+      taskCatAvatar =
+          isDeleting != null ?
+              res.taskCatVeryHappy : res.taskCatCatsplaining;
+    }
+
     notifyListeners();
   }
 
@@ -35,13 +41,19 @@ class TaskCatSharedData extends ChangeNotifier{
     Map <String, dynamic> rawData = inTask.taskToMap();
     int? result = await values.database.update(rawData);
     print('$result task updated');
+    taskCatAvatar = res.taskCatRegular;
     readTasks();
   }
 
   deleteTask(Task inTask) async {
     int? result = await values.database.delete(inTask.id ?? 1);
     print('deleted $result task');
-    readTasks();
+    taskCatAvatar = res.taskCatHappy;
+    readTasks(isDeleting: true);
   }
 
+  void flipList(){
+    order = (order == 'ASC') ?
+        'DESC' : 'ASC';
+  }
 }

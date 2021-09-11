@@ -41,9 +41,9 @@ class DatabaseHelper {
     return result;
   }
 
-  read() async{
+  read(String order) async{
     final db = await database;
-    String sql = 'SELECT * FROM tasks ORDER BY id';
+    String sql = 'SELECT * FROM tasks ORDER BY id $order';
     List rawData = await db.rawQuery(sql);
     return rawData;
   }

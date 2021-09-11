@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_cat/model/task.dart';
 import 'package:task_cat/res/utils.dart' as utils;
-import 'package:task_cat/res/values.dart' as values;
 import 'package:task_cat/screens/entry_screen.dart';
 import 'package:task_cat/shared_data/task_cat_shared_data.dart';
 
@@ -18,7 +17,9 @@ class ListSection extends StatelessWidget {
         ),
         child: Consumer<TaskCatSharedData>(
           builder: (_, data, __) {
-            data.readTasks();
+            if(!data.hasInitialized){
+              data.readTasks();
+            }
             return Stack(
               children: [
                 Container(
