@@ -7,6 +7,17 @@ import 'package:task_cat/shared_data/task_cat_shared_data.dart';
 import 'package:task_cat/widgets/task_cat_button.dart';
 
 class EntryScreen extends StatelessWidget {
+  final Task? task;
+  final _textController = TextEditingController();
+  EntryScreen({this.task}){
+    if(!_isNewTask()){
+      _textController.text = this.task!.name!;
+    }
+  }
+
+  bool _isNewTask() => this.task == null;
+
+
   @override
   Widget build(BuildContext inContext) {
     return Consumer<TaskCatSharedData>(
@@ -25,17 +36,16 @@ class EntryScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  'New Task',
+                Text( _isNewTask() ?
+                  'New Task' : 'Edit Task',
                   style: TextStyle(
                       fontSize: 42,
                       fontWeight: FontWeight.w700,
                       color: values.taskCatThemeColor),
                 ),
                 TextField(
-                  onChanged: (String inValue){
-                    data.setTaskBeingEdited( Task(name: inValue) );
-                  },
+                  autofocus: true,
+                  controller: _textController,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: values.taskCatThemeColor,
@@ -43,7 +53,6 @@ class EntryScreen extends StatelessWidget {
                   keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'type in a new task',
                     hintStyle: TextStyle(
                       color: Color(0x4b000000),
                     ),
@@ -54,13 +63,17 @@ class EntryScreen extends StatelessWidget {
                   children: [
                     TaskCatButton(
                       inText: 'Cancel',
-                      inOnPressed: () {},
+                      inOnPressed: () => Navigator.pop(inContext),
                     ),
                     TaskCatButton(
-                      inText: 'Save',
+                      inText: _isNewTask() ?
+                      'Save' : 'Update',
                       inOnPressed: () async{
-                        _isNewTask(data) ?
-                            _saveTask(inContext, data) : (){} ;
+                        if(_textController.text == '') return;
+                        String taskName = _textController.text;
+                        _isNewTask() ?
+                          create(taskName, data) : update(taskName, data);
+                        await _backToHomeScreen(inContext);
                       },
                     )
                   ],
@@ -72,23 +85,21 @@ class EntryScreen extends StatelessWidget {
       },
     );
   }
-  
-  _saveTask(BuildContext inContext, TaskCatSharedData data) async {
-    final newTask = data.taskBeingEdited;
-    if(newTask.name == '') return;
-    Map<String, String?> rawData = {'name': newTask.name};
-    int? result = await values.database.create(rawData);
-    print('task of id $result was created');
-    await _backToHomeScreen(inContext, data);
+
+  void update(String taskName, TaskCatSharedData data) {
+    this.task!.name = taskName;
+    data.updateTask(this.task!);
   }
 
-  bool _nameFieldIsEmpty(Task task) => task.name == '';
+  void create(String taskName, TaskCatSharedData data) {
+    final newTask = Task(taskName);
+    data.createTask(newTask);
+  }
 
-  Future<void> _backToHomeScreen(BuildContext inContext, TaskCatSharedData data) async {
+  Future<void> _backToHomeScreen(BuildContext inContext) async {
     utils.hideKeyboard(inContext);
-    await utils.sleep(milliseconds: 500);
-    data.setStackIndex(0);
+    await utils.sleep(milliseconds: 400);
+    Navigator.pop(inContext);
   }
 
-  bool _isNewTask(TaskCatSharedData data) => data.taskBeingEdited.id == null;
 }

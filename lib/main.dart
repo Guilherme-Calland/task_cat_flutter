@@ -34,13 +34,7 @@ class TaskCat extends StatelessWidget {
         ),
         home: Consumer<TaskCatSharedData>(
           builder: (_, data, __){
-            return IndexedStack(
-              index: data.stackIndex,
-              children: [
-                HomeScreen(),
-                EntryScreen(),
-              ],
-            );
+            return HomeScreen();
           },
         ),
       ),

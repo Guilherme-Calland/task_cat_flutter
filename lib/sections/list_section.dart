@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_cat/model/task.dart';
+import 'package:task_cat/res/utils.dart' as utils;
 import 'package:task_cat/res/values.dart' as values;
+import 'package:task_cat/screens/entry_screen.dart';
 import 'package:task_cat/shared_data/task_cat_shared_data.dart';
 
 class ListSection extends StatelessWidget {
@@ -16,6 +18,7 @@ class ListSection extends StatelessWidget {
         ),
         child: Consumer<TaskCatSharedData>(
           builder: (_, data, __) {
+            data.readTasks();
             return Stack(
               children: [
                 Container(
@@ -23,12 +26,18 @@ class ListSection extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: data.taskList.length,
                     itemBuilder: (_, int inIndex) {
-                      Task task = data.taskList[inIndex];
+                      Task taskOnIndex = data.taskList[inIndex];
                       return Container(
                         child: Column(
                           children: [
                             ListTile(
-                              title: Text(task.name ?? ''),
+                              title: Text(taskOnIndex.name ?? ''),
+                              onTap: (){
+                                data.deleteTask( taskOnIndex );
+                              },
+                              onLongPress: (){
+                                utils.pushScreen(inContext, EntryScreen(task: taskOnIndex));
+                              },
                             ),
                             Divider(),
                           ],
@@ -40,8 +49,7 @@ class ListSection extends StatelessWidget {
                 Positioned(
                   child: GestureDetector(
                     onTap: () {
-                      data.setTaskBeingEdited( new Task() );
-                      data.setStackIndex(1);
+                      utils.pushScreen(inContext, EntryScreen());
                     },
                     child: data.taskCatAvatar,
                   ),

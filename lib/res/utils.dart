@@ -14,3 +14,9 @@ Future<dynamic> sleep({required int milliseconds}) =>
 void hideKeyboard(BuildContext inContext) {
   FocusScope.of(inContext).requestFocus(FocusNode());
 }
+
+void pushScreen(BuildContext inContext, Widget newScreen) async {
+  Navigator.push(
+      inContext, MaterialPageRoute(builder: (context) => newScreen)
+  );
+}

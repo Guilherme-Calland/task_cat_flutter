@@ -2,15 +2,15 @@ class Task{
   int? id;
   String? name;
 
-  Task({this.name = ''});
+  Task(this.name);
 
   Task.mapToTask(Map rawData){
     this.id = rawData['id'];
     this.name = rawData['name'];
   }
 
-  Map taskToMap(){
-    Map rawData = {
+  Map<String, dynamic> taskToMap(){
+    Map<String, dynamic> rawData = {
       'name' : this.name
     };
 

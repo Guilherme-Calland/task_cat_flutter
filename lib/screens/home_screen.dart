@@ -9,9 +9,6 @@ import 'package:task_cat/shared_data/task_cat_shared_data.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext inContext) {
-
-    _retreiveTasksFromDatabase(inContext);
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -25,10 +22,5 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _retreiveTasksFromDatabase(BuildContext inContext) {
-    final provider = Provider.of<TaskCatSharedData>(inContext, listen: false);
-    provider.loadData();
   }
 }

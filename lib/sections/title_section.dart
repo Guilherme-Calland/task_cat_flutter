@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:task_cat/res/values.dart' as values;
+import 'package:task_cat/shared_data/task_cat_shared_data.dart';
 
 class TitleSection extends StatelessWidget {
   @override
-  Widget build(_) {
+  Widget build(BuildContext inContext) {
+    final provider = Provider.of<TaskCatSharedData>(inContext, listen: true);
+    final numTasks = provider.taskList.length;
     return Container(
       padding: EdgeInsets.only(
         top: 80,
@@ -33,7 +37,7 @@ class TitleSection extends StatelessWidget {
             ),
           ),
           Text(
-            '5 tasks',
+            '$numTasks tasks',
             style: TextStyle(
               color: Colors.white,
             ),

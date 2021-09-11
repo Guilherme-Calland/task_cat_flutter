@@ -7,21 +7,20 @@ class TaskCatSharedData extends ChangeNotifier{
 
   int stackIndex = 0;
   var taskCatAvatar = res.taskCatRegular;
-  Task taskBeingEdited = Task();
   List<Task> taskList = [];
-
 
   void setStackIndex(int index){
     stackIndex = index;
-    notifyListeners();
   }
 
-  void setTaskBeingEdited(Task inTask){
-    taskBeingEdited = inTask;
-    notifyListeners();
+  createTask(Task task) async {
+    Map<String, dynamic> rawData = task.taskToMap();
+    int? result = await values.database.create(rawData);
+    print('created task of id $result');
+    readTasks();
   }
 
-  void loadData() async{
+  readTasks() async{
     List rawData = await values.database.read();
     List<Task> tempTaskList = [];
     rawData.forEach((element) {
@@ -30,6 +29,19 @@ class TaskCatSharedData extends ChangeNotifier{
     });
     taskList = tempTaskList;
     notifyListeners();
+  }
+
+  updateTask(Task inTask) async {
+    Map <String, dynamic> rawData = inTask.taskToMap();
+    int? result = await values.database.update(rawData);
+    print('$result task updated');
+    readTasks();
+  }
+
+  deleteTask(Task inTask) async {
+    int? result = await values.database.delete(inTask.id ?? 1);
+    print('deleted $result task');
+    readTasks();
   }
 
 }
