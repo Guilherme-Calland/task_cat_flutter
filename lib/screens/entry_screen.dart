@@ -63,7 +63,9 @@ class EntryScreen extends StatelessWidget {
                   children: [
                     TaskCatButton(
                       inText: 'Cancel',
-                      inOnPressed: () => Navigator.pop(inContext),
+                      inOnPressed: () async{
+                        await _backToHomeScreen(inContext);
+                      },
                     ),
                     TaskCatButton(
                       inText: _isNewTask() ?
