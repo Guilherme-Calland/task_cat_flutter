@@ -37,13 +37,14 @@ class ListSection extends StatelessWidget {
                     itemBuilder: (_, int inIndex) {
                       Task taskOnIndex = data.taskList[inIndex];
                       return Slidable(
-                        key: ValueKey(inIndex),
+                        key: ValueKey(taskOnIndex.id),
                         actionPane: SlidableScrollActionPane(),
                         actions: [
                           TaskCatSlidableButton(
                             iconData: Icons.edit,
                             onPressed: () {
-                              print('time to edit');
+                              utils.pushScreen(
+                                  inContext, EntryScreen(task: taskOnIndex));
                             },
                           ),
                           TaskCatSlidableButton(
@@ -54,7 +55,7 @@ class ListSection extends StatelessWidget {
                           )
                         ],
                         child: Container(
-                          padding: EdgeInsets.all(4),
+                          padding: EdgeInsets.symmetric(vertical: 4),
                           child: Column(
                             children: [
                               ListTile(
@@ -67,7 +68,9 @@ class ListSection extends StatelessWidget {
                           ),
                         ),
                       );
-                    }, onReorder: (int oldIndex, int newIndex) {},
+                    }, onReorder: (int oldIndex, int newIndex){
+                          _onReorder(oldIndex, newIndex, data);
+                        },
                   ),
                 ),
                 Positioned(
@@ -96,5 +99,31 @@ class ListSection extends StatelessWidget {
       ),
     );
   }
-}
+
+  void _onReorder(int firstIndex, int secondIndex, TaskCatSharedData data){
+      int index1 = firstIndex;
+      int index2 = secondIndex;
+      List tempList = data.taskList;
+      if(firstIndex < secondIndex) {
+        index2 = secondIndex - 1;
+      }
+
+      String tempName = tempList[index1].name;
+      tempList[index1].name = tempList[index2].name;
+      tempList[index2].name = tempName;
+
+      data.updateTask(tempList[index1], writeOnly: true);
+      data.updateTask(tempList[index2]);
+      // String? firstTaskName = tempList[index1].name;
+      // String? secondTaskName = tempList[index2].name;
+      // tempList[index2].name = firstTaskName;
+      //
+
+      //
+      // // data.taskList[index1].name = secondTaskName;
+      // data.updateTask(data.taskList[index2], writeOnly: true);
+      // data.updateTask(data.taskList[index1]);
+      }
+  }
+
 

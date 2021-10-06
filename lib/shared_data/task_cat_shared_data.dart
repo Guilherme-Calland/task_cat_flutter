@@ -40,12 +40,18 @@ class TaskCatSharedData extends ChangeNotifier{
     notifyListeners();
   }
 
-  updateTask(Task inTask) async {
+  updateTask(Task inTask, {bool? writeOnly}) async {
+    print('i am here!');
+    if(writeOnly == null){
+      writeOnly = false;
+    }
     Map <String, dynamic> rawData = inTask.taskToMap();
     int? result = await values.database.update(rawData);
-    print('$result task updated');
-    taskCatAvatar = res.taskCatRegular;
-    readTasks();
+    if(!writeOnly) {
+      print('$result task updated');
+      taskCatAvatar = res.taskCatRegular;
+      readTasks();
+    }
   }
 
   deleteTask(Task inTask) async {

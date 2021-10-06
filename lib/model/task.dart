@@ -11,7 +11,7 @@ class Task{
 
   Map<String, dynamic> taskToMap(){
     Map<String, dynamic> rawData = {
-      'name' : this.name
+      'name' : this.name,
     };
 
     if(this.id != null){
