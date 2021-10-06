@@ -41,7 +41,6 @@ class TaskCatSharedData extends ChangeNotifier{
   }
 
   updateTask(Task inTask, {bool? writeOnly}) async {
-    print('i am here!');
     if(writeOnly == null){
       writeOnly = false;
     }
