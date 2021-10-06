@@ -13,10 +13,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   # data base
   sqflite: ^2.0.0+4
-  #shared data
+  # shared data
   provider: ^6.0.0
-  #typing text animation
+  # typing text animation
   animated_text_kit: ^4.2.1
+  # reorder list
+  reorderables: ^0.4.1
+  # slide list item for more options
+  flutter_slidable: ^0.6.0
 
 dev_dependencies:
   flutter_test:
