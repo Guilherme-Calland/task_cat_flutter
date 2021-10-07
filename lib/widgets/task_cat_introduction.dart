@@ -49,7 +49,7 @@ class TaskCatIntroduction extends StatelessWidget {
             'Oh, and to invert the list order, just tap on the icon above the app title.',
           ),
           TyperAnimatedText(
-            'To repeat the instructions, just press and hold on me!',
+            'To repeat the instructions, or to shut me up, just press and hold on me!',
             speed: Duration(milliseconds: 80),
           ),
           TyperAnimatedText(
