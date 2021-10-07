@@ -38,9 +38,8 @@ class ListSection extends StatelessWidget {
                       Task taskOnIndex = data.taskList[inIndex];
                       return GestureDetector(
                         key: ValueKey(taskOnIndex.id),
-                        onTap: () => utils.pushScreen(
-                            inContext, EntryScreen(task: taskOnIndex)),
-                        onDoubleTap: () => data.deleteTask(taskOnIndex),
+                        onDoubleTap: () => _goToEditScreen(inContext, taskOnIndex),
+                        onTap: () => data.deleteTask(taskOnIndex),
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 4),
                           child: Column(
@@ -54,9 +53,7 @@ class ListSection extends StatelessWidget {
                         ),
                       );
                     },
-                    onReorder: (int oldIndex, int newIndex) {
-                      _onReorder(oldIndex, newIndex, data);
-                    },
+                    onReorder: (int oldIndex, int newIndex) => _onReorder(oldIndex, newIndex, data),
                   ),
                 ),
                 Positioned(
@@ -110,5 +107,10 @@ class ListSection extends StatelessWidget {
       tempList[index2 + 1].name = tempName;
       data.updateTask(tempList[index2 + 1]);
     }
+  }
+
+  void _goToEditScreen(BuildContext inContext, Task task){
+    utils.pushScreen(
+        inContext, EntryScreen(task: task));
   }
 }

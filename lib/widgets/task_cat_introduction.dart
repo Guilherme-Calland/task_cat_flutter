@@ -26,11 +26,11 @@ class TaskCatIntroduction extends StatelessWidget {
             speed: Duration(milliseconds: 80),
           ),
           TyperAnimatedText(
-            'To edit a task just tap on the selected task.',
+            'To delete a task just tap on the selected task.',
             speed: Duration(milliseconds: 80),
           ),
           TyperAnimatedText(
-            'To delete a task just double tap the selected task.',
+            'To edit a task just double tap the selected task.',
             speed: Duration(milliseconds: 80),
           ),
           TyperAnimatedText(
