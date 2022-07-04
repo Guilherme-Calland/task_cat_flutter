@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_cat/model/task.dart';
 import 'package:task_cat/res/resources.dart' as res;
 import 'package:task_cat/res/utils.dart' as utils;
@@ -9,8 +10,22 @@ class TaskCatSharedData extends ChangeNotifier{
   bool hasInitialized = false;
   var taskCatAvatar = res.taskCatRegular;
   List<Task> taskList = [];
-  String order = 'ASC';
-  bool playTextAnimation = false;
+  String? order = 'ASC';
+  bool? playTextAnimation;
+
+  TaskCatSharedData(){
+    getPreferences();
+  }
+
+  getPreferences() async{
+    final prefs = await SharedPreferences.getInstance();
+    playTextAnimation = prefs.getBool('firstTimeUsingApp');
+    if(playTextAnimation == null){
+      beginTextAnimation();
+      await prefs.setBool('firstTimeUsingApp', false);
+    }
+    // order = prefs.getString('listOrder');
+  }
 
   createTask(Task task) async {
     Map<String, dynamic> rawData = task.taskToMap();
@@ -22,7 +37,7 @@ class TaskCatSharedData extends ChangeNotifier{
 
   readTasks({bool? isDeleting}) async{
     hasInitialized = true;
-    List rawData = await values.database.read(order);
+    List rawData = await values.database.read(order ?? 'ASC');
     List<Task> tempTaskList = [];
     rawData.forEach((element) {
       Task tempTask = Task.mapToTask(element);
@@ -33,8 +48,6 @@ class TaskCatSharedData extends ChangeNotifier{
     if(taskList.isEmpty){
       if(isDeleting != null){
         taskCatAvatar = res.taskCatVeryHappy;
-      }else{
-        beginTextAnimation();
       }
     }
     notifyListeners();

@@ -59,16 +59,18 @@ class ListSection extends StatelessWidget {
                 Positioned(
                   child: Row(
                     children: [
-                      data.playTextAnimation
+                      (data.playTextAnimation ?? false)
                           ? TaskCatIntroduction(
                               callback: () => data.finishTextAnimation(),
                             )
                           : Container(width: 0),
                       TaskCatAvatar(
                         image: data.taskCatAvatar,
-                        callback: () => !data.playTextAnimation
+                        callback: (){
+                          !(data.playTextAnimation ?? false)
                             ? data.beginTextAnimation()
-                            : data.finishTextAnimation(),
+                            : data.finishTextAnimation();
+                        }
                       ),
                     ],
                   ),
