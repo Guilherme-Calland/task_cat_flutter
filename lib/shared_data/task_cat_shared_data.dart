@@ -10,7 +10,7 @@ class TaskCatSharedData extends ChangeNotifier{
   bool hasInitialized = false;
   var taskCatAvatar = res.taskCatRegular;
   List<Task> taskList = [];
-  String? order = 'ASC';
+  String? order;
   bool? playTextAnimation;
 
   TaskCatSharedData(){
@@ -19,12 +19,18 @@ class TaskCatSharedData extends ChangeNotifier{
 
   getPreferences() async{
     final prefs = await SharedPreferences.getInstance();
+    order = prefs.getString('listOrder');
+    if(order == null){
+      order = 'ASC';
+      await prefs.setString('listOrder', 'ASC');
+    }
+
     playTextAnimation = prefs.getBool('firstTimeUsingApp');
     if(playTextAnimation == null){
       beginTextAnimation();
       await prefs.setBool('firstTimeUsingApp', false);
     }
-    // order = prefs.getString('listOrder');
+    notifyListeners();
   }
 
   createTask(Task task) async {
@@ -36,6 +42,14 @@ class TaskCatSharedData extends ChangeNotifier{
   }
 
   readTasks({bool? isDeleting}) async{
+    if(!hasInitialized){
+      final prefs = await SharedPreferences.getInstance();
+      order = prefs.getString('listOrder');
+      if(order == null){
+        order = 'ASC';
+        await prefs.setString('listOrder', 'ASC');
+      }
+    }
     hasInitialized = true;
     List rawData = await values.database.read(order ?? 'ASC');
     List<Task> tempTaskList = [];
@@ -73,9 +87,11 @@ class TaskCatSharedData extends ChangeNotifier{
     readTasks(isDeleting: true);
   }
 
-  void flipList(){
+  void flipList() async{
     order = (order == 'ASC') ?
         'DESC' : 'ASC';
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('listOrder', order ?? 'ASC');
     readTasks();
   }
 
